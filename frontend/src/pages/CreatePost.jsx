@@ -1,184 +1,239 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { useToast } from "@/hooks/use-toast"
-import { getFilePreview, uploadFile } from "@/lib/appwrite/uploadImage"
-import React, { useState } from "react"
-import ReactQuill from "react-quill"
-import "react-quill/dist/quill.snow.css"
-import { useNavigate } from "react-router-dom"
+import React, { useState } from "react";
 
 const CreatePost = () => {
-  const { toast } = useToast()
-  const navigate = useNavigate()
 
-  const [file, setFile] = useState(null)
-  const [imageUploadError, setImageUploadError] = useState(null)
-  const [imageUploading, setImageUploading] = useState(false)
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    image: "",
+    content: "",
+  });
 
-  const [formData, setFormData] = useState({})
-  // console.log(formData)
+  const [message, setMessage] = useState("");
 
-  const [createPostError, setCreatePostError] = useState(null)
+  const handleChange = (e) => {
 
-  const handleUploadImage = async () => {
-    try {
-      if (!file) {
-        setImageUploadError("Please select an image!")
-        toast({ title: "Please select an image!" })
-        return
-      }
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
 
-      setImageUploading(true)
-
-      setImageUploadError(null)
-
-      const uploadedFile = await uploadFile(file)
-      const postImageUrl = getFilePreview(uploadedFile.$id)
-
-      setFormData({ ...formData, image: postImageUrl })
-
-      toast({ title: "Image Uploaded Successfully!" })
-
-      if (postImageUrl) {
-        setImageUploading(false)
-      }
-    } catch (error) {
-      setImageUploadError("Image upload failed")
-      console.log(error)
-
-      toast({ title: "Image upload failed!" })
-      setImageUploading(false)
-    }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+
+    e.preventDefault();
 
     try {
-      const res = await fetch("/api/post/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
 
-      const data = await res.json()
+      const res = await fetch(
+        "http://localhost:5000/api/post/create",
+        {
+          method: "POST",
 
-      if (!res.ok) {
-        toast({ title: "Something went wrong! Please try again." })
-        setCreatePostError(data.message)
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-        return
-      }
+          credentials: "include",
+
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await res.json();
 
       if (res.ok) {
-        toast({ title: "Article Published Successfully!" })
-        setCreatePostError(null)
 
-        navigate(`/post/${data.slug}`)
+        setMessage("✅ Post Created Successfully!");
+
+        setFormData({
+          title: "",
+          category: "",
+          image: "",
+          content: "",
+        });
+
+      } else {
+
+        setMessage(data.message || "❌ Failed");
+
       }
+
     } catch (error) {
-      toast({ title: "Something went wrong! Please try again." })
-      setCreatePostError("Something went wrong! Please try again.")
+
+      console.log(error);
+
+      setMessage("❌ Server Error");
+
     }
-  }
+  };
 
   return (
-    <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold text-slate-700">
-        Create a post
-      </h1>
 
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <Input
-            type="text"
-            placeholder="Title"
-            required
-            id="title"
-            className="w-full sm:w-3/4 h-12 border border-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0"
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-          />
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black flex items-center justify-center px-5 py-10">
 
-          <Select
-            onValueChange={(value) =>
-              setFormData({ ...formData, category: value })
-            }
-          >
-            <SelectTrigger className="w-full sm:w-1/4 h-12 border border-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0">
-              <SelectValue placeholder="Select a Category" />
-            </SelectTrigger>
+      {/* MAIN CARD */}
 
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Category</SelectLabel>
-                <SelectItem value="worldnews">World News</SelectItem>
-                <SelectItem value="sportsnews">Sports News</SelectItem>
-                <SelectItem value="localnews">Local News</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+      <div className="relative w-full max-w-3xl overflow-hidden rounded-[35px] border border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_25px_80px_rgba(59,130,246,0.35)]">
+
+        {/* GLOW EFFECT */}
+
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/20"></div>
+
+        {/* HEADER */}
+
+        <div className="relative z-10 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 px-8 py-7">
+
+          <h2 className="text-4xl font-extrabold text-white drop-shadow-xl">
+
+            🚀 Create News Article
+
+          </h2>
+
+          <p className="mt-2 text-white/80 text-sm">
+
+            Publish trending and breaking news instantly
+
+          </p>
+
         </div>
 
-        <div className="flex gap-4 items-center justify-between border-4 border-slate-600 border-dotted p-3">
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+        {/* FORM */}
 
-          <Button
-            type="button"
-            className="bg-slate-700"
-            onClick={handleUploadImage}
-          >
-            {imageUploading ? "Uploading..." : "Upload Image"}
-          </Button>
-        </div>
-
-        {imageUploadError && <p className="text-red-600">{imageUploadError}</p>}
-
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="upload"
-            className="w-full h-72 object-cover"
-          />
-        )}
-
-        <ReactQuill
-          theme="snow"
-          placeholder="Write something here..."
-          className="h-72  mb-12"
-          required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value })
-          }}
-        />
-
-        <Button
-          type="submit"
-          className="h-12 bg-green-600 font-semibold max-sm:mt-5 text-md"
+        <form
+          onSubmit={handleSubmit}
+          className="relative z-10 p-8 flex flex-col gap-6"
         >
-          Publish Your Article
-        </Button>
 
-        {createPostError && (
-          <p className="text-red-600 mt-5">{createPostError}</p>
-        )}
-      </form>
+          {/* TITLE */}
+
+          <div className="flex flex-col gap-2">
+
+            <label className="text-white font-semibold tracking-wide">
+
+              News Title
+
+            </label>
+
+            <input
+              type="text"
+              name="title"
+              placeholder="Enter trending news title..."
+              onChange={handleChange}
+              value={formData.title}
+              className="rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-white placeholder:text-gray-300 outline-none backdrop-blur-xl shadow-lg focus:border-cyan-400 focus:ring-4 focus:ring-cyan-500/30 transition"
+              required
+            />
+
+          </div>
+
+          {/* CATEGORY */}
+
+          <div className="flex flex-col gap-2">
+
+            <label className="text-white font-semibold tracking-wide">
+
+              News Category
+
+            </label>
+
+            <select
+              name="category"
+              onChange={handleChange}
+              value={formData.category}
+              className="rounded-2xl border border-white/20 bg-slate-900/70 px-5 py-4 text-white outline-none shadow-lg focus:border-blue-400 focus:ring-4 focus:ring-blue-500/30 transition"
+            >
+
+              <option value="">
+                Select Category
+              </option>
+
+              <option value="worldnews">
+                🌍 World News
+              </option>
+
+              <option value="sportsnews">
+                ⚽ Sports News
+              </option>
+
+              <option value="localnews">
+                📍 Local News
+              </option>
+
+            </select>
+
+          </div>
+
+          {/* IMAGE */}
+
+          <div className="flex flex-col gap-2">
+
+            <label className="text-white font-semibold tracking-wide">
+
+              Image URL
+
+            </label>
+
+            <input
+              type="text"
+              name="image"
+              placeholder="Paste image URL (optional)"
+              onChange={handleChange}
+              value={formData.image}
+              className="rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-white placeholder:text-gray-300 outline-none backdrop-blur-xl shadow-lg focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition"
+            />
+
+          </div>
+
+          {/* CONTENT */}
+
+          <div className="flex flex-col gap-2">
+
+            <label className="text-white font-semibold tracking-wide">
+
+              Article Content
+
+            </label>
+
+            <textarea
+              name="content"
+              placeholder="Write full news article..."
+              onChange={handleChange}
+              value={formData.content}
+              className="h-44 rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-white placeholder:text-gray-300 outline-none backdrop-blur-xl shadow-lg focus:border-pink-400 focus:ring-4 focus:ring-pink-500/30 transition resize-none"
+            ></textarea>
+
+          </div>
+
+          {/* BUTTON */}
+
+          <button
+            className="mt-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 py-4 text-lg font-bold text-white shadow-[0_10px_40px_rgba(59,130,246,0.5)] hover:scale-105 hover:shadow-[0_15px_50px_rgba(139,92,246,0.7)] transition duration-300"
+          >
+
+            🔥 Publish News
+
+          </button>
+
+          {/* MESSAGE */}
+
+          {message && (
+
+            <div className="mt-2 rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center text-white shadow-lg backdrop-blur-xl">
+
+              {message}
+
+            </div>
+
+          )}
+
+        </form>
+
+      </div>
+
     </div>
-  )
-}
+  );
+};
 
-export default CreatePost
+export default CreatePost;

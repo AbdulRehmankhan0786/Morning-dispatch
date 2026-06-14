@@ -6,114 +6,255 @@ import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 const Home = () => {
+
   const [posts, setPosts] = useState([])
 
-  // console.log(posts)
+  // 🔥 DELETE FUNCTION
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const res = await fetch("/api/post/getPosts?limit=6")
+  const handleDelete = async (postId) => {
+
+    try {
+
+      const res = await fetch(
+        `http://localhost:5000/api/post/delete/${postId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      )
 
       const data = await res.json()
 
       if (res.ok) {
-        setPosts(data.posts)
+
+        setPosts((prev) =>
+          prev.filter((post) => post._id !== postId)
+        )
+
+      } else {
+
+        console.log(data.message)
+
       }
+
+    } catch (error) {
+
+      console.log(error)
+
+    }
+  }
+
+  // 🔥 FETCH POSTS
+
+  useEffect(() => {
+
+    const fetchPosts = async () => {
+
+      const res = await fetch(
+        "http://localhost:5000/api/post/getPosts?limit=6"
+      )
+
+      const data = await res.json()
+
+      if (res.ok) {
+
+        setPosts(data.posts)
+
+      }
+
     }
 
     fetchPosts()
+
   }, [])
 
   return (
-    <div>
-      <div className="flex flex-col gap-6 p-28 max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-blue-800">
-          Welcome to <span className="text-red-600"> Morning Dispatch</span>
-        </h1>
 
-        <p className="text-gray-600 mt-3 text-lg">
-          Your trusted source for the latest headlines, in-depth analysis, and
-          breaking news every morning.
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
 
-        <p className="text-gray-500 mt-1 italic">Stay informed, stay ahead.</p>
+      {/* HERO SECTION */}
 
-        <Link to={"/search"}>
-          <Button className="bg-yellow-400 hover:bg-yellow-600 text-black py-3 px-6 rounded-full font-semibold shadow-lg flex items-center gap-2 w-fit">
-            View all posts <ArrowRight className="h-5 w-5" />
-          </Button>
-        </Link>
-      </div>
+      <section className="relative py-28">
 
-      <section className="pb-16 bg-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8 text-gray-800">
-            Why You'll Love Morning Dispatch
-          </h2>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,#3b82f6,transparent_30%),radial-gradient(circle_at_bottom_left,#9333ea,transparent_30%)] opacity-30"></div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard
-              title={"Diverse Content"}
-              description={
-                "Explore news on a variety of topics, from technology to lifestyle."
-              }
-              icon="📚"
-            />
+        <div className="max-w-6xl mx-auto text-center px-4 relative z-10">
 
-            <FeatureCard
-              title={"Community Driven"}
-              description={
-                "Connect with writers and readers who share your interests."
-              }
-              icon="🌐"
-            />
+          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
 
-            <FeatureCard
-              title={"Easy to Use"}
-              description={
-                "A seamless platform for sharing and discovering great content."
-              }
-              icon="🚀"
-            />
-          </div>
+            Welcome to{" "}
+
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+
+              Morning Dispatch
+
+            </span>
+
+          </h1>
+
+          <p className="text-gray-300 max-w-2xl mx-auto text-lg leading-8">
+
+            Stay updated with breaking headlines, global stories,
+            technology updates and trending news from around the world.
+
+          </p>
+
+          <Link to={"/search"}>
+
+            <Button className="mt-10 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 px-10 py-6 rounded-full text-white text-lg flex gap-2 items-center mx-auto shadow-2xl hover:scale-105 transition duration-300">
+
+              Explore News
+
+              <ArrowRight size={20} />
+
+            </Button>
+
+          </Link>
+
         </div>
+
       </section>
 
-      <div className="p-3 bg-white">
+      {/* FEATURES */}
+
+      <section className="pb-24">
+
+        <div className="max-w-7xl mx-auto px-4 text-center">
+
+          <h2 className="text-4xl md:text-5xl font-bold mb-16">
+
+            Why Choose Morning Dispatch
+
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+
+            <Link to="/search?category=headlines">
+
+  <FeatureCard
+    title="Latest Headlines"
+    description="Stay updated with the most important stories happening around the world."
+    icon="📰"
+  />
+
+</Link>
+
+<Link to="/search?category=worldnews">
+
+  <FeatureCard
+    title="Global Coverage"
+    description="Technology, sports, politics, finance and entertainment updates."
+    icon="🌍"
+  />
+
+</Link>
+
+<Link to="/search?sort=desc">
+
+  <FeatureCard
+    title="Fast Updates"
+    description="Breaking news delivered quickly with modern digital experience."
+    icon="⚡"
+  />
+
+</Link>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ADVERTISE */}
+
+      <div className="max-w-6xl mx-auto px-4 pb-20">
+
         <Advertise />
+
       </div>
 
-      <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7">
-        {posts && posts.length > 0 && (
-          <div className="flex flex-col gap-6">
-            <h2 className="text-2xl font-bold text-slate-700">Recent Posts</h2>
+      {/* POSTS */}
 
-            <div className="flex flex-wrap gap-4">
-              {posts.map((post) => (
-                <PostCard key={post._id} post={post} />
-              ))}
+      <section className="max-w-7xl mx-auto px-4 pb-28">
+
+        {posts && posts.length > 0 && (
+
+          <div className="flex flex-col gap-12">
+
+            <div className="flex justify-between items-center">
+
+              <h2 className="text-4xl font-bold">
+
+                Latest News
+
+              </h2>
+
+              <Link
+                to={"/search"}
+                className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2"
+              >
+
+                View all
+
+                <ArrowRight size={20} />
+
+              </Link>
+
             </div>
 
-            <Link
-              to={"/search"}
-              className="text-lg hover:underline text-center font-semibold"
-            >
-              View all news
-            </Link>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+              {posts.map((post) => (
+
+                <PostCard
+                  key={post._id}
+                  post={post}
+                  onDelete={handleDelete}
+                />
+
+              ))}
+
+            </div>
+
           </div>
+
         )}
-      </div>
+
+      </section>
+
     </div>
+
   )
 }
 
+// 🔥 FEATURE CARD
+
 const FeatureCard = ({ title, description, icon }) => {
+
   return (
-    <div className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
-      <div className="text-5xl mb-4">{icon}</div>
-      <h3 className="text-2xl font-semibold text-gray-800 mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+
+    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl p-10 shadow-2xl hover:-translate-y-3 hover:shadow-cyan-500/20 transition duration-500">
+
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/20 opacity-0 hover:opacity-100 transition duration-500"></div>
+
+      <div className="relative z-10">
+
+        <div className="text-6xl mb-6">
+          {icon}
+        </div>
+
+        <h3 className="text-2xl font-bold mb-4">
+          {title}
+        </h3>
+
+        <p className="text-gray-300 leading-7">
+          {description}
+        </p>
+
+      </div>
+
     </div>
+
   )
 }
 

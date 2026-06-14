@@ -96,14 +96,17 @@ const EditPost = () => {
     console.log(formData._id)
 
     try {
-      const res = await fetch(
-        `/api/post/updatepost/${postId}/${currentUser._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      )
+     const res = await fetch(
+  `/api/post/updatepost/${postId}/${currentUser._id}`,
+  {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(formData),
+  }
+)
 
       const data = await res.json()
 

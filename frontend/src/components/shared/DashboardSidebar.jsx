@@ -1,126 +1,268 @@
 import { signOutSuccess } from "@/redux/user/userSlice"
 import React from "react"
-import { FaComments, FaSignOutAlt, FaUserAlt, FaUsers } from "react-icons/fa"
+import {
+  FaComments,
+  FaSignOutAlt,
+  FaUserAlt,
+  FaUsers,
+} from "react-icons/fa"
+
 import { useDispatch, useSelector } from "react-redux"
-import { Link } from "react-router-dom"
-import { IoIosCreate, IoIosDocument } from "react-icons/io"
+
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom"
+
+import {
+  IoIosCreate,
+  IoIosDocument,
+} from "react-icons/io"
+
 import { MdDashboardCustomize } from "react-icons/md"
 
 const DashboardSidebar = () => {
+
   const dispatch = useDispatch()
 
-  const { currentUser } = useSelector((state) => state.user)
+  const navigate = useNavigate()
+
+  const { currentUser } =
+    useSelector((state) => state.user)
+
+  // SIGN OUT
 
   const handleSignout = async () => {
+
     try {
-      const res = await fetch("/api/user/signout", {
-        method: "POST",
-      })
+
+      const res = await fetch(
+        "/api/user/signout",
+        {
+          method: "POST",
+        }
+      )
 
       const data = await res.json()
 
       if (!res.ok) {
+
         console.log(data.message)
+
       } else {
+
         dispatch(signOutSuccess())
+
+        // REDIRECT TO SIGN IN
+
+        navigate("/sign-in")
+
       }
+
     } catch (error) {
+
       console.log(error)
+
     }
+
   }
 
   return (
-    <aside className="h-screen w-64 bg-slate-200 text-slate-800 flex flex-col">
-      {/* Logo/ Header */}
-      <div className="p-4 flex items-center justify-center bg-slate-200">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+
+    <aside className="h-screen w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-black text-white flex flex-col border-r border-white/10 shadow-2xl">
+
+      {/* HEADER */}
+
+      <div className="p-6 flex items-center justify-center border-b border-white/10">
+
+        <h1 className="text-3xl font-extrabold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+
+          Dashboard
+
+        </h1>
+
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {currentUser && currentUser.isAdmin && (
+      {/* NAVIGATION */}
+
+      <nav className="flex-1 p-5">
+
+        <ul className="space-y-4">
+
+          {/* DASHBOARD */}
+
+          {currentUser &&
+            currentUser.isAdmin && (
+
             <li>
+
               <Link
                 to={"/dashboard?tab=dashboard"}
-                className="flex items-center p-2 hover:bg-slate-300 rounded"
+                className="flex items-center gap-4 rounded-2xl bg-white/5 px-5 py-4 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 transition duration-300 shadow-lg"
               >
-                <MdDashboardCustomize className="mr-3" />
-                <span>Dashboard</span>
+
+                <MdDashboardCustomize size={22} />
+
+                <span className="font-medium text-lg">
+
+                  Dashboard
+
+                </span>
+
               </Link>
+
             </li>
+
           )}
+
+          {/* PROFILE */}
 
           <li>
+
             <Link
               to={"/dashboard?tab=profile"}
-              className="flex items-center p-2 hover:bg-slate-300 rounded"
+              className="flex items-center gap-4 rounded-2xl bg-white/5 px-5 py-4 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 transition duration-300 shadow-lg"
             >
-              <FaUserAlt className="mr-3" />
-              <span>Profile</span>
+
+              <FaUserAlt size={20} />
+
+              <span className="font-medium text-lg">
+
+                Profile
+
+              </span>
+
             </Link>
+
           </li>
 
-          {currentUser && currentUser.isAdmin && (
+          {/* CREATE POST */}
+
+          {currentUser &&
+            currentUser.isAdmin && (
+
             <li>
+
               <Link
                 to={"/create-post"}
-                className="flex items-center p-2 hover:bg-slate-300 rounded"
+                className="flex items-center gap-4 rounded-2xl bg-white/5 px-5 py-4 hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-600 transition duration-300 shadow-lg"
               >
-                <IoIosCreate className="mr-3" />
-                <span>Create Post</span>
+
+                <IoIosCreate size={24} />
+
+                <span className="font-medium text-lg">
+
+                  Create Post
+
+                </span>
+
               </Link>
+
             </li>
+
           )}
 
-          {currentUser && currentUser.isAdmin && (
+          {/* POSTS */}
+
+          {currentUser &&
+            currentUser.isAdmin && (
+
             <li>
+
               <Link
                 to={"/dashboard?tab=posts"}
-                className="flex items-center p-2 hover:bg-slate-300 rounded"
+                className="flex items-center gap-4 rounded-2xl bg-white/5 px-5 py-4 hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-600 transition duration-300 shadow-lg"
               >
-                <IoIosDocument className="mr-3" />
-                <span>Your articles</span>
+
+                <IoIosDocument size={24} />
+
+                <span className="font-medium text-lg">
+
+                  Your Articles
+
+                </span>
+
               </Link>
+
             </li>
+
           )}
 
-          {currentUser && currentUser.isAdmin && (
+          {/* USERS */}
+
+          {currentUser &&
+            currentUser.isAdmin && (
+
             <li>
+
               <Link
                 to={"/dashboard?tab=users"}
-                className="flex items-center p-2 hover:bg-slate-300 rounded"
+                className="flex items-center gap-4 rounded-2xl bg-white/5 px-5 py-4 hover:bg-gradient-to-r hover:from-orange-500 hover:to-red-600 transition duration-300 shadow-lg"
               >
-                <FaUsers className="mr-3" />
-                <span>All Users</span>
+
+                <FaUsers size={20} />
+
+                <span className="font-medium text-lg">
+
+                  All Users
+
+                </span>
+
               </Link>
+
             </li>
+
           )}
 
-          {currentUser && currentUser.isAdmin && (
+          {/* COMMENTS */}
+
+          {currentUser &&
+            currentUser.isAdmin && (
+
             <li>
+
               <Link
                 to={"/dashboard?tab=comments"}
-                className="flex items-center p-2 hover:bg-slate-300 rounded"
+                className="flex items-center gap-4 rounded-2xl bg-white/5 px-5 py-4 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-600 transition duration-300 shadow-lg"
               >
-                <FaComments className="mr-3" />
-                <span>All Comments</span>
+
+                <FaComments size={20} />
+
+                <span className="font-medium text-lg">
+
+                  All Comments
+
+                </span>
+
               </Link>
+
             </li>
+
           )}
+
         </ul>
 
-        <div className="p-4 border-t border-gray-700">
-          <button
-            className="flex items-center w-full p-2 hover:bg-slate-300 rounded"
-            onClick={handleSignout}
-          >
-            <FaSignOutAlt className="mr-3" />
-            <span>Logout</span>
-          </button>
-        </div>
       </nav>
+
+      {/* LOGOUT */}
+
+      <div className="p-5 border-t border-white/10">
+
+        <button
+          onClick={handleSignout}
+          className="w-full flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-red-500 to-pink-600 px-5 py-4 text-lg font-semibold text-white shadow-2xl hover:scale-105 transition duration-300"
+        >
+
+          <FaSignOutAlt size={20} />
+
+          Logout
+
+        </button>
+
+      </div>
+
     </aside>
+
   )
 }
 

@@ -1,139 +1,174 @@
-import Advertise from "@/components/shared/Advertise"
-import CommentSection from "@/components/shared/CommentSection"
-import PostCard from "@/components/shared/PostCard"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import React, { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import Advertise from "@/components/shared/Advertise";
+import CommentSection from "@/components/shared/CommentSection";
+import PostCard from "@/components/shared/PostCard";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const PostDetails = () => {
-  const { postSlug } = useParams()
+  const { postSlug } = useParams();
 
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
-  const [post, setPost] = useState(null)
-  const [recentArticles, setRecentArticles] = useState(null)
+  const [loading, setLoading] = useState(true);
+  const [post, setPost] = useState(null);
+  const [recentArticles, setRecentArticles] = useState([]);
 
-  console.log(recentArticles)
-
-  // console.log(post)
-
+  // 🔥 FETCH POST (API + FALLBACK)
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
 
-        const res = await fetch(`/api/post/getposts?slug=${postSlug}`)
-
-        const data = await res.json()
-
-        if (!res.ok) {
-          setError(true)
-          setLoading(false)
-
-          return
-        }
+        const res = await fetch(`/api/post/getPost/${postSlug}`);
 
         if (res.ok) {
-          setPost(data.posts[0])
-          setLoading(false)
-          setError(true)
+          const data = await res.json();
+          setPost(data);
+          setLoading(false);
+          return;
         }
-      } catch (error) {
-        setError(true)
-        setLoading(false)
+
+        // fallback
+        const allRes = await fetch("/api/post/getposts?limit=1000");
+        const allData = await allRes.json();
+
+        const foundPost = allData.posts.find(
+          (p) => p._id === postSlug
+        );
+
+        setPost(foundPost || null);
+        setLoading(false);
+
+      } catch (err) {
+        console.log(err);
+        setPost(null);
+        setLoading(false);
       }
-    }
+    };
 
-    fetchPost()
-  }, [postSlug])
+    fetchPost();
+  }, [postSlug]);
 
+  // 🔹 RECENT POSTS
   useEffect(() => {
-    try {
-      const fetchRecentPosts = async () => {
-        const res = await fetch(`/api/post/getposts?limit=3`)
+    const fetchRecentPosts = async () => {
+      const res = await fetch("/api/post/getposts?limit=3");
+      const data = await res.json();
 
-        const data = await res.json()
-
-        if (res.ok) {
-          setRecentArticles(data.posts)
-        }
+      if (res.ok) {
+        setRecentArticles(data.posts || []);
       }
+    };
 
-      fetchRecentPosts()
-    } catch (error) {
-      console.log(error.message)
-    }
-  }, [])
+    fetchRecentPosts();
+  }, []);
 
+  // 🔹 LOADING
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <img
-          src="https://cdn-icons-png.flaticon.com/128/39/39979.png"
-          alt="loading"
-          className="w-20 animate-spin"
-        />
+        <h2 className="text-lg animate-pulse">Loading...</h2>
       </div>
-    )
+    );
   }
+
+  // 🔹 ERROR
+  if (!post) {
+    return (
+      <h2 className="text-center mt-20 text-xl text-red-600">
+        Article not found
+      </h2>
+    );
+  }
+
+  // 🔥 CLEAN TEXT (remove HTML safely)
+  const cleanText =
+    post.content?.replace(/<[^>]+>/g, "").trim() || "";
+
+  // 🔥 DESCRIPTION (ALWAYS SHOW)
+  const description =
+    cleanText.length > 0
+      ? cleanText.slice(0, 150)
+      : "This is a news article covering important updates and insights. Stay tuned for full details.";
+
+  // 🔥 READ TIME
+  const readTime = Math.ceil(
+    (cleanText.length || 200) / 200
+  );
 
   return (
     <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
-      <h1 className="text-3xl mt-10 p-3 text-center font-bold max-w-3xl mx-auto lg:text-4xl text-slate-700 underline">
-        {post && post.title}
+
+      {/* TITLE */}
+      <h1 className="text-3xl mt-10 text-center font-bold text-slate-800">
+        {post.title}
       </h1>
 
-      <Link
-        to={`/search?category=${post && post.category}`}
-        className="self-center mt-5"
-      >
-        <Button variant="outline" className="border border-slate-500">
-          {post && post.category}
-        </Button>
-      </Link>
+      {/* CATEGORY */}
+      {post.category && post.category !== "uncategorized" && (
+        <Link
+          to={`/search?category=${post.category}`}
+          className="self-center mt-5"
+        >
+          <Button variant="outline">{post.category}</Button>
+        </Link>
+      )}
 
+      {/* IMAGE */}
       <img
-        src={post && post.image}
-        alt={post && post.title}
-        className="mt-10 p-3 max-h-[500px] w-full object-cover"
+        src={post.image || "https://via.placeholder.com/800x400"}
+        alt={post.title}
+        className="mt-8 w-full max-h-[500px] object-cover rounded-lg shadow-md"
       />
 
-      <div className="flex justify-between p-3 mx-auto w-full max-w-2xl text-xs">
-        <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+      {/* 🔥 DESCRIPTION */}
+      <p className="text-gray-600 text-center mt-5 max-w-2xl mx-auto text-lg">
+        {description}...
+      </p>
+      
 
-        <span className="italic">
-          {post && (post.content.length / 100).toFixed(0)} mins read
-        </span>
+      {/* META */}
+      <div className="flex justify-between mt-4 text-sm text-gray-500 max-w-3xl mx-auto w-full">
+        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+        <span>{readTime} min read</span>
       </div>
 
-      <Separator className="bg-slate-500" />
+      <Separator className="my-5" />
 
-      <div
-        className="p-3 max-w-3xl mx-auto w-full post-content"
-        dangerouslySetInnerHTML={{ __html: post && post.content }}
-      ></div>
+      {/* CONTENT */}
+      <div className="max-w-3xl mx-auto leading-8 text-gray-800 text-lg space-y-4">
+        {cleanText.length > 0 ? (
+          <div
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          ></div>
+        ) : (
+          <p className="text-center text-gray-500">
+            No detailed content available for this article.
+          </p>
+        )}
+      </div>
 
-      <div className="max-w-4xl mx-auto w-full">
+      {/* AD */}
+      <div className="mt-10">
         <Advertise />
       </div>
 
+      {/* COMMENTS */}
       <CommentSection postId={post._id} />
 
-      <div className="flex flex-col justify-center items-center mb-5">
-        <h1 className="text-xl font-semibold mt-5 text-slate-700">
-          Recently published articles
-        </h1>
+      {/* RECENT POSTS */}
+      <div className="text-center mt-10">
+        <h2 className="text-xl font-semibold">Recent Articles</h2>
 
-        <div className="flex flex-wrap gap-5 my-5 justify-center">
-          {recentArticles &&
-            recentArticles.map((post) => (
-              <PostCard key={post._id} post={post} />
-            ))}
+        <div className="flex flex-wrap justify-center gap-5 mt-5">
+          {recentArticles.map((p) => (
+            <PostCard key={p._id} post={p} />
+          ))}
         </div>
       </div>
-    </main>
-  )
-}
 
-export default PostDetails
+    </main>
+  );
+};
+
+export default PostDetails;

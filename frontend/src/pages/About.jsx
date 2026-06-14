@@ -1,87 +1,254 @@
-import React from "react"
+import React from "react";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
-      {/* Content Section */}
-      <div className="w-full max-w-6xl px-6 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          {/* Left */}
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              Who We Are
-            </h2>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden">
 
-            <p className="text-gray-600 leading-relaxed">
-              We are a passionate team committed to driving change through
-              innovation and collaboration. Our platform is designed to empower
-              individuals and organizations to unlock their true potential.
-            </p>
+      {/* HERO SECTION */}
+
+      <div className="relative py-24 px-6">
+
+        {/* GLOW EFFECT */}
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,#06b6d4,transparent_30%),radial-gradient(circle_at_bottom_left,#7c3aed,transparent_30%)] opacity-30"></div>
+
+        <div className="relative z-10 max-w-6xl mx-auto">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+
+            {/* LEFT */}
+
+            <div>
+
+              <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+
+                About{" "}
+
+                <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+
+                  Morning Dispatch
+
+                </span>
+
+              </h1>
+
+              <p className="text-gray-300 text-lg leading-9">
+
+                We are a passionate team committed to driving change through
+                innovation and collaboration. Our platform is designed to empower
+                individuals and organizations to unlock their true potential.
+
+                Morning Dispatch provides trending news, technology updates,
+                global headlines and modern digital journalism in one beautiful platform.
+
+              </p>
+
+              <button className="mt-8 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 text-white font-semibold shadow-2xl hover:scale-105 transition duration-300">
+
+                Explore Articles
+
+              </button>
+
+            </div>
+
+            {/* RIGHT IMAGE */}
+
+            <div className="relative">
+
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 blur-3xl opacity-30 rounded-full"></div>
+
+              <img
+                src="https://images.pexels.com/photos/723072/pexels-photo-723072.jpeg?auto=compress&cs=tinysrgb&w=600"
+                alt=""
+                className="relative rounded-[30px] shadow-[0_20px_60px_rgba(0,0,0,0.5)] hover:scale-105 transition duration-500"
+              />
+
+            </div>
+
           </div>
 
-          {/* Right (image) */}
-          <div className="relative">
-            <img
-              src="https://images.pexels.com/photos/723072/pexels-photo-723072.jpeg?auto=compress&cs=tinysrgb&w=600"
-              alt=""
-              className="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-            />
-          </div>
         </div>
+
       </div>
 
-      {/* Team Section */}
-      <div className="w-full bg-gray-100 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
-          Meet Our Team
+      {/* FEATURES SECTION */}
+
+      <div className="max-w-7xl mx-auto px-6 pb-24">
+
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+
+          Why Choose Us
+
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div className="text-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png"
-              alt="Team member"
-              className="w-32 h-32 rounded-full mx-auto mb-4"
-            />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-            <h3 className="text-xl font-semibold text-gray-700">
-              Jaime Lannister
-            </h3>
+          {/* CARD 1 */}
 
-            <p className="text-gray-500">CEO</p>
+          <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 backdrop-blur-2xl p-10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] hover:-translate-y-4 hover:shadow-cyan-500/20 transition duration-500">
+
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative z-10">
+
+              <div className="text-6xl mb-6">📰</div>
+
+              <h3 className="text-2xl font-bold mb-4">
+                Latest News
+              </h3>
+
+              <p className="text-gray-300 leading-8">
+                Stay updated with trending stories and breaking headlines from around the world.
+              </p>
+
+            </div>
+
           </div>
 
-          <div className="text-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/4140/4140037.png"
-              alt="Team member"
-              className="w-32 h-32 rounded-full mx-auto mb-4"
-            />
+          {/* CARD 2 */}
 
-            <h3 className="text-xl font-semibold text-gray-700">
-              Cersei Lannister
-            </h3>
+          <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 backdrop-blur-2xl p-10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] hover:-translate-y-4 hover:shadow-blue-500/20 transition duration-500">
 
-            <p className="text-gray-500">CTO</p>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-purple-500/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative z-10">
+
+              <div className="text-6xl mb-6">🌍</div>
+
+              <h3 className="text-2xl font-bold mb-4">
+                Global Coverage
+              </h3>
+
+              <p className="text-gray-300 leading-8">
+                Technology, politics, sports and entertainment updates all in one place.
+              </p>
+
+            </div>
+
           </div>
 
-          <div className="text-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/6997/6997662.png"
-              alt="Team member"
-              className="w-32 h-32 rounded-full mx-auto mb-4"
-            />
+          {/* CARD 3 */}
 
-            <h3 className="text-xl font-semibold text-gray-700">
-              Daenerys Targaryen
-            </h3>
+          <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 backdrop-blur-2xl p-10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] hover:-translate-y-4 hover:shadow-purple-500/20 transition duration-500">
 
-            <p className="text-gray-500">Lead Designer</p>
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative z-10">
+
+              <div className="text-6xl mb-6">⚡</div>
+
+              <h3 className="text-2xl font-bold mb-4">
+                Fast Updates
+              </h3>
+
+              <p className="text-gray-300 leading-8">
+                Experience lightning-fast updates with smooth modern digital design.
+              </p>
+
+            </div>
+
           </div>
+
         </div>
-      </div>
-    </div>
-  )
-}
 
-export default About
+      </div>
+
+      {/* TEAM SECTION */}
+
+      <div className="w-full py-24 px-6 bg-white/5 backdrop-blur-xl border-t border-white/10">
+
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+
+          Meet Our Team
+
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
+
+          {/* MEMBER 1 */}
+
+          <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 backdrop-blur-2xl p-10 text-center shadow-[0_20px_60px_rgba(0,0,0,0.5)] hover:-translate-y-4 transition duration-500">
+
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative z-10">
+
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png"
+                alt="Team member"
+                className="w-36 h-36 rounded-full mx-auto mb-6 border-4 border-cyan-500 shadow-xl"
+              />
+
+              <h3 className="text-2xl font-bold">
+                Abdul Rehman Khan
+              </h3>
+
+              <p className="text-cyan-400 mt-3 text-lg">
+                CEO & Founder
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* MEMBER 2 */}
+
+          <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 backdrop-blur-2xl p-10 text-center shadow-[0_20px_60px_rgba(0,0,0,0.5)] hover:-translate-y-4 transition duration-500">
+
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-purple-500/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative z-10">
+
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/4140/4140037.png"
+                alt="Team member"
+                className="w-36 h-36 rounded-full mx-auto mb-6 border-4 border-blue-500 shadow-xl"
+              />
+
+              <h3 className="text-2xl font-bold">
+                Abdul Basit Khan
+              </h3>
+
+              <p className="text-blue-400 mt-3 text-lg">
+                CTO
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* MEMBER 3 */}
+
+          <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 backdrop-blur-2xl p-10 text-center shadow-[0_20px_60px_rgba(0,0,0,0.5)] hover:-translate-y-4 transition duration-500">
+
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative z-10">
+
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/4140/4140037.png"
+                alt="Team member"
+                className="w-36 h-36 rounded-full mx-auto mb-6 border-4 border-purple-500 shadow-xl"
+              />
+
+              <h3 className="text-2xl font-bold">
+                Mohd Sameer
+              </h3>
+
+              <p className="text-purple-400 mt-3 text-lg">
+                Lead Designer
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+};
+
+export default About;

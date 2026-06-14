@@ -1,195 +1,114 @@
-import React, { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useToast } from "@/hooks/use-toast"
-import GoogleAuth from "@/components/shared/GoogleAuth"
+export default function SignUp() {
 
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(2, { message: "Username must be atleast 2 characters" }),
-  email: z.string().min({ message: "Invalid email address." }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be atleast 8 characters." }),
-})
+  const navigate = useNavigate();
 
-const SignUpForm = () => {
-  const { toast } = useToast()
-  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    username:"",
+    email:"",
+    password:""
+  });
 
-  const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message,setMessage] = useState("");
 
-  // 1. Define your form.
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-    },
-  })
+  const handleChange = (e)=>{
+    setFormData({
+      ...formData,
+      [e.target.name]:e.target.value
+    })
+  }
 
-  // 2. Define a submit handler.
-  async function onSubmit(values) {
-    try {
-      setLoading(true)
-      setErrorMessage(null)
+  const handleSubmit = async (e)=>{
+    e.preventDefault()
 
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+    try{
+
+      const res = await fetch("http://localhost:5000/api/auth/signup",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(formData)
       })
 
       const data = await res.json()
 
-      if (data.success === false) {
-        setLoading(false)
-        toast({ title: "Sign up failed! Please try again." })
-
-        return setErrorMessage(data.message)
+      if(!res.ok){
+        setMessage(data.message)
+        return
       }
 
-      setLoading(false)
+      setMessage("Signup successful")
 
-      if (res.ok) {
-        toast({ title: "Sign up Successful!" })
+      setTimeout(()=>{
         navigate("/sign-in")
-      }
-    } catch (error) {
-      setErrorMessage(error.message)
-      setLoading(false)
-      toast({ title: "Something went wrong!" })
+      },1000)
+
+    }catch(error){
+      setMessage("Server error")
     }
   }
 
   return (
-    <div className="min-h-screen mt-20">
-      <div className="flex p-3 max-w-3xl sm:max-w-5xl mx-auto flex-col md:flex-row md:items-center gap-5">
-        {/* left */}
-        <div className="flex-1">
-          <Link
-            to={"/"}
-            className="font-bold text-2xl sm:text-4xl flex flex-wrap"
+
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+
+        <h2 className="text-3xl font-bold text-center mb-6">
+          Create Account
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          onChange={handleChange}
+          className="w-full border p-3 rounded-lg"
+          />
+
+          <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+          className="w-full border p-3 rounded-lg"
+          />
+
+          <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+          className="w-full border p-3 rounded-lg"
+          />
+
+          <button className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800">
+            Sign Up
+          </button>
+
+        </form>
+
+        <p className="text-center mt-4 text-sm">
+          Already have an account? 
+          <span
+          onClick={()=>navigate("/sign-in")}
+          className="text-blue-500 cursor-pointer ml-2"
           >
-            <span className="text-slate-500">Morning</span>
-            <span className="text-slate-900">Dispatch</span>
-          </Link>
+            Sign In
+          </span>
+        </p>
 
-          <h2 className="text-[24px] md:text-[30px] font-bold leading-[140%] tracking-tighter pt-5 sm:pt-12">
-            Create a new account
-          </h2>
+        {message && (
+          <p className="text-center text-red-500 mt-3">{message}</p>
+        )}
 
-          <p className="text-slate-500 text-[14px] font-medium leading-[140%] md:text-[16px] md:font-normal mt-2">
-            Welcome to Morning Dispatch, Please provide your details
-          </p>
-        </div>
-
-        {/* right */}
-        <div className="flex-1">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-
-                    <FormControl>
-                      <Input type="text" placeholder="Username" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="xyz@email.com"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                className="bg-blue-500 w-full"
-                disabled={loading}
-              >
-                {loading ? (
-                  <span className="animate-pulse">Loading...</span>
-                ) : (
-                  <span>Sign Up</span>
-                )}
-              </Button>
-
-              <GoogleAuth />
-            </form>
-          </Form>
-
-          <div className="flex gap-2 text-sm mt-5">
-            <span>Have an account?</span>
-
-            <Link to="/sign-in" className="text-blue-500">
-              Sign In
-            </Link>
-          </div>
-
-          {errorMessage && <p className="mt-5 text-red-500">{errorMessage}</p>}
-        </div>
       </div>
+
     </div>
   )
 }
-
-export default SignUpForm
