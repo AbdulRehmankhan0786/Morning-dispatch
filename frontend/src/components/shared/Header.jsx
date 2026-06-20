@@ -34,7 +34,7 @@ const Header = () => {
  const handleSignout = async () => {
   try {
 
-    const res = await fetch("http://localhost:5000/api/user/signout", {
+    const res = await fetch("http://https://morning-dispatch.onrender.com/api/user/signout", {
       method: "POST",
       credentials: "include",
     });

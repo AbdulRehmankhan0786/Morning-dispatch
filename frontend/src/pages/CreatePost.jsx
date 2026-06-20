@@ -27,7 +27,7 @@ const CreatePost = () => {
     try {
 
       const res = await fetch(
-        "http://localhost:5000/api/post/create",
+        "http://https://morning-dispatch.onrender.com/api/post/create",
         {
           method: "POST",
 
