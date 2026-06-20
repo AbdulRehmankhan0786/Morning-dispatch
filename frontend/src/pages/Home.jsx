@@ -16,7 +16,7 @@ const Home = () => {
     try {
 
       const res = await fetch(
-        `http://https://morning-dispatch.onrender.com/api/post/delete/${postId}`,
+        `https://morning-dispatch.onrender.com/api/post/delete/${postId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -51,7 +51,7 @@ const Home = () => {
     const fetchPosts = async () => {
 
       const res = await fetch(
-        "http://https://morning-dispatch.onrender.com/api/post/getPosts?limit=6"
+        "https://morning-dispatch.onrender.com/api/post/getPosts?limit=6"
       )
 
       const data = await res.json()

@@ -25,7 +25,7 @@ export default function SignUp() {
 
     try{
 
-      const res = await fetch("http://https://morning-dispatch.onrender.com/api/auth/signup",{
+      const res = await fetch("https://morning-dispatch.onrender.com/api/auth/signup",{
         method:"POST",
         headers:{
           "Content-Type":"application/json"

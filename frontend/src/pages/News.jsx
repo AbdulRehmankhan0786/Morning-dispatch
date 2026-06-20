@@ -12,7 +12,7 @@ const News = () => {
       try {
 
         const res = await fetch(
-          "http://https://morning-dispatch.onrender.com/api/post/getposts"
+          "https://morning-dispatch.onrender.com/api/post/getposts"
         )
 
         const data = await res.json()

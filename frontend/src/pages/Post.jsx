@@ -14,7 +14,7 @@ const Post = () => {
       try {
 
         const res = await fetch(
-          `http://https://morning-dispatch.onrender.com/api/post/getpost/${postId}`
+          `https://morning-dispatch.onrender.com/api/post/getpost/${postId}`
         )
 
         const data = await res.json()

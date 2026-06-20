@@ -27,7 +27,7 @@ const SignInForm = () => {
       dispatch(signInStart());
 
       const res = await fetch(
-        "http://https://morning-dispatch.onrender.com/api/auth/signin",
+        "https://morning-dispatch.onrender.com/api/auth/signin",
         {
           method: "POST",
 
