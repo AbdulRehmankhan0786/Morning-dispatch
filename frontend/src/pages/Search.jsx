@@ -55,7 +55,7 @@ const Search = () => {
 
       const searchQuery = urlParams.toString()
 
-      const res = await fetch(`/api/post/getposts?${searchQuery}`)
+      const res = await fetch(`https://morning-dispatch.onrender.com/api/post/getposts?${searchQuery}`)
 
       if (!res.ok) {
         setLoading(false)
@@ -107,9 +107,8 @@ const Search = () => {
 
     const searchQuery = urlParams.toString()
 
- const res = await fetch(
-  `https://morning-dispatch.onrender.com/api/post/getposts?${searchQuery}`
-)
+ const res = await fetch(`https://morning-dispatch.onrender.com/api/post/getposts?${searchQuery}`)
+
 
     if (!res.ok) {
       return
